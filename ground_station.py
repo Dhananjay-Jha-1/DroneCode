@@ -22,18 +22,18 @@ print("Connecting to scan drone...")
 # The `mavutil.mavlink_connection` will handle the UDP "connection"
 scan_master = mavutil.mavlink_connection(SCAN_DRONE_PORT)
 scan_master.wait_heartbeat()
-print("✅ Scan drone connected!")
+print("Scan drone connected!")
 
 print("Connecting to delivery drone...")
 delivery_master = mavutil.mavlink_connection(DELIVERY_DRONE_PORT)
 delivery_master.wait_heartbeat()
-print("✅ Delivery drone connected!")
+print("Delivery drone connected!")
 
 # 2. Command the scan drone to fly its mission
 print("Arming scan drone...")
 scan_master.arducopter_arm()
 scan_master.set_mode('AUTO')
-print("🚀 Scan drone launched!")
+print("Scan drone launched!")
 
 # 3. Listen for scan drone position and simulate survivor detection
 print("Listening for scan drone position to find survivors...")
@@ -44,7 +44,7 @@ while not survivor_found:
     scan_lon = msg.lon * 1.0e-7
     
     if abs(scan_lat - SURVIVOR_LAT) < 0.0001 and abs(scan_lon - SURVIVOR_LON) < 0.0001:
-        print("🚨 Survivor detected! Geotagging location...")
+        print(" Survivor detected! Geotagging location...")
         survivor_location = (scan_lat, scan_lon, ALTITUDE)
         survivor_found = True
     time.sleep(1)
@@ -59,8 +59,8 @@ delivery_master.mav.mission_item_send(
     0, 0, 0, 0, 0, 0,
     survivor_location[0], survivor_location[1], survivor_location[2]
 )
-print("✅ Mission sent to delivery drone.")
+print("Mission sent to delivery drone.")
 time.sleep(1)
 delivery_master.arducopter_arm()
 delivery_master.set_mode('AUTO')
-print("🚀 Delivery drone launched!")
+print("Delivery drone launched!")
